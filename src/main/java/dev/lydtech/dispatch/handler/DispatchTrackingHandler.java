@@ -1,7 +1,7 @@
-package dev.lydtech.handler;
+package dev.lydtech.dispatch.handler;
 
-import dev.lydtech.service.TrackingService;
-import dev.lydtech.message.DispatchPreparing;
+import dev.lydtech.dispatch.message.DispatchPreparing;
+import dev.lydtech.dispatch.service.TrackingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

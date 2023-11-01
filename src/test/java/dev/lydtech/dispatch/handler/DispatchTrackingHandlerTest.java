@@ -1,11 +1,9 @@
-package dev.lydtech.handler;
+package dev.lydtech.dispatch.handler;
 
-import dev.lydtech.service.TrackingService;
-import dev.lydtech.message.DispatchPreparing;
+import dev.lydtech.dispatch.service.TrackingService;
+import dev.lydtech.dispatch.message.DispatchPreparing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
-package dev.lydtech;
+package dev.lydtech.dispatch;
 
-import dev.lydtech.message.DispatchPreparing;
+import dev.lydtech.dispatch.message.DispatchPreparing;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
