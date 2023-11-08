@@ -1,6 +1,7 @@
 package dev.lydtech.dispatch.integration;
 
 import dev.lydtech.dispatch.DispatchConfiguration;
+import dev.lydtech.dispatch.message.DispatchCompleted;
 import dev.lydtech.dispatch.message.DispatchPreparing;
 import dev.lydtech.dispatch.message.TrackingStatusUpdated;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,8 @@ public class TrackingIntegrationTest {
         testListener.dispatchStatusCounter.set(0);
         // Wait until the partitions are assigned.
         registry.getListenerContainers().stream().forEach(container ->
-                ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic()));
+                ContainerTestUtils.waitForAssignment(container, container.getContainerProperties().getTopics().length*
+                        embeddedKafkaBroker.getPartitionsPerTopic()));
     }
     private void sendMessage(String topic, Object data) throws Exception {
         kafkaTemplate.send(MessageBuilder
@@ -82,16 +84,31 @@ public class TrackingIntegrationTest {
         void receiveDispatchedStatus(@Payload TrackingStatusUpdated payload) {
             log.debug("Received OrderDispatched: " + payload);
            dispatchStatusCounter.incrementAndGet();
+
         }
     }
 
     @Test
-    public void testTrackingFlow() throws Exception {
+    public void testPrepFlow() throws Exception {
         DispatchPreparing dispatchPreparing = DispatchPreparing.builder()
                                               .orderId(randomUUID()).build();
         sendMessage(DISPATCH_TRACKING_TOPIC, dispatchPreparing);
 
         await().atMost(3, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
                 .until(testListener.dispatchStatusCounter::get, equalTo(1));
+
+
       }
+
+    @Test
+    public void testCompFlow() throws Exception {
+        DispatchCompleted dispatchCompleted = DispatchCompleted.builder()
+                .orderId(randomUUID()).build();
+        sendMessage(DISPATCH_TRACKING_TOPIC, dispatchCompleted);
+
+        await().atMost(3, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
+                .until(testListener.dispatchStatusCounter::get, equalTo(1));
+
+
+    }
 }

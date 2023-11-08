@@ -21,6 +21,9 @@ import java.util.Map;
 @ComponentScan(basePackages = {"dev.lydtech"})
 @Configuration
 public class DispatchConfiguration {
+
+    private static String TRUSTED_PACKAGES = "dev.lydtech.dispatch.message";
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -34,7 +37,7 @@ public class DispatchConfiguration {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, DispatchPreparing.class.getCanonicalName());
+        config.put(JsonDeserializer.TRUSTED_PACKAGES, TRUSTED_PACKAGES);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(config);
     }
